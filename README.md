@@ -1,16 +1,17 @@
 # coursework-ML
 
-h1 Цель.
+Цель.
 Знакомство с осонвыми принципами глубокого обучения, анализа изображений.
 
-h1 Задача.
+Задача.
 Решить задачу классивикации и локализации персонажей мультипликационного сериала The Simpsons
 на изображениях. За основы взят следующий [dataset](https://www.kaggle.com/alexattia/the-simpsons-characters-dataset) 
 
-h1 План работы:
+План работы:
 
-1) [Пройти курс](https://www.coursera.org/learn/intro-to-deep-learning?).
-   [Уже пройдено](https://stepik.org/course/50352/syllabus).
+1) [Introduction to Deep Learning (5 из 6 недель пройдено)](https://www.coursera.org/learn/intro-to-deep-learning?), 
+   [Нейронные сети и компьютерное зрение (Пройдено)](https://stepik.org/course/50352/syllabus), 
+   [youtube лекции 2017-2018 (Пройдено)](http://cs231n.stanford.edu/).
 
 2) Ознакомиться с механизмом глубоких сетей для задач классивикации-локализации (сверточные нейроннные сети, чередование слоев
 свертки, пуллинга, активации, с послудующим переходом к полносвязным слоям).
