@@ -1,0 +1,44 @@
+def get_model():
+    basic_dropout = 0.3
+    mlp_small_dropout = 0.15
+    mlp_dropout = 0.5
+    tf.keras.backend.clear_session()
+    input_layer = keras.Input(shape=(HEIGHT, WIDTH, 3), name='image')
+    
+    x = layers.Conv2D(3, 3, activation='relu')(input_layer)
+    x = layers.Conv2D(16, 3, activation='relu')(x)
+    x = layers.MaxPooling2D()(x)
+    x = layers.Dropout(basic_dropout)(x)
+    
+    x = layers.Conv2D(16, 3, activation='relu')(x)
+    x = layers.Conv2D(32, 3, activation='relu')(x)
+    x = layers.MaxPooling2D()(x)
+    x = layers.Dropout(basic_dropout)(x)
+    
+    x = layers.Conv2D(32, 3, activation='relu')(x)
+    x = layers.Conv2D(256, 3, activation='relu')(x)
+    
+    
+    # classification = layers.Dropout(mlp_dropout)(x)
+    classification = layers.GlobalMaxPool2D()(x)
+    classification = layers.Dropout(mlp_small_dropout)(classification)
+    classification = layers.Dense(370, activation='relu')(classification)
+    classification = layers.Dropout(mlp_dropout)(classification)
+    # classification = layers.Dense(256, activation='relu')(x)
+    # classification = layers.Dropout(mlp_dropout)(classification)
+    classification = layers.Dense(len(labels), activation='softmax', name='classification')(classification)
+    
+    localization = layers.MaxPool2D(4)(x)
+    localization = layers.Flatten()(localization)
+    localization = layers.Dropout(mlp_small_dropout)(localization)
+    localization = layers.Dense(450, activation='relu')(localization)
+    localization = layers.BatchNormalization()(localization)
+    localization = layers.Dropout(mlp_dropout)(localization)
+    localization = layers.Dense(200, activation='relu')(localization)
+    localization = layers.Dropout(basic_dropout)(localization)
+    # localization = layers.Dense(256, activation='relu')(localization)
+    # localization = layers.Dropout(basic_dropout)(localization)
+    localization = layers.Dense(4, activation='relu', name='localization')(localization)
+    
+    model = keras.Model(inputs=input_layer, outputs=[localization, classification], name='classification_localizaion_model')
+    return model
