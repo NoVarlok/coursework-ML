@@ -93,7 +93,11 @@ def main_function():
 root = Tk()
 root.title('Всерод')
 root.resizable(False, False)
-model = load_model()
+try:
+    model = load_model()
+except Exception:
+    mb.showerror("Ошибка", 'Не удалось загрузить модель')
+    exit(0)
 message = Label(root, text='Путь до изображения', width=40)
 image_path_entry = Entry(root, width=40)
 load_button = Button(root, text='Загрузить изображение', command=add_path)
