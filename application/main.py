@@ -4,6 +4,7 @@ import cv2
 from tkinter import *
 from tkinter import filedialog as fd
 from tkinter import messagebox as mb
+from datetime import datetime
 
 
 MAX_HEIGHT = 1072
@@ -11,6 +12,7 @@ MAX_WIDTH = 1912
 shrink = 8
 HEIGHT = MAX_HEIGHT // shrink
 WIDTH = MAX_WIDTH // shrink
+print(HEIGHT, WIDTH)
 labels = ['abraham_grampa_simpson', 'apu_nahasapeemapetilon', 'bart_simpson', 'charles_montgomery_burns',
           'chief_wiggum', 'comic_book_guy', 'edna_krabappel', 'homer_simpson', 'kent_brockman', 'krusty_the_clown',
           'lisa_simpson', 'marge_simpson', 'milhouse_van_houten', 'moe_szyslak', 'ned_flanders', 'nelson_muntz',
@@ -35,11 +37,13 @@ def load_model(path='localization_adam_533_9834.h5'):
 
 
 def viewImage(image, name_of_window, coords):
-    cv2.putText(image, name_of_window, coords, cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))
+    cv2.putText(image, name_of_window.split(' ')[0], coords, cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))
+    cv2.putText(image, name_of_window.split(' ')[1], (coords[0], coords[1]+25), cv2.FONT_HERSHEY_DUPLEX, 1, (0, 0, 255))
     cv2.namedWindow(name_of_window, cv2.WINDOW_NORMAL)
+    height, width, _ = image.shape
+    cv2.resizeWindow(name_of_window, width, height)
     # cv2.namedWindow('Prediction', cv2.WINDOW_NORMAL)
     cv2.imshow(name_of_window, image)
-    # cv2.imshow('Prediction', image)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
 
@@ -47,7 +51,9 @@ def viewImage(image, name_of_window, coords):
 def final_image(image_path, model):
     nn_image = load_and_preprocess_nn(image_path)
     nn_image = tf.expand_dims(nn_image, 0)
+    start_time = datetime.now()
     predicted_coords, predicted_labels = model.predict(nn_image)
+    print('Prediction time:', datetime.now() - start_time)
     predicted_coords = predicted_coords[0]
     predicted_label = predicted_labels[0].argmax()
     character = labels[predicted_label]
@@ -62,7 +68,7 @@ def final_image(image_path, model):
     cv2.rectangle(image, (predicted_coords[0], predicted_coords[1]), (predicted_coords[2], predicted_coords[3]),
                   (0, 0, 255), 5)
     title = "%s: %.2f%%" % (character, probability)
-    viewImage(image, title, (0, height-3))
+    viewImage(image, title, (0, height - 30))
 
 
 # if __name__ == '__main__':
